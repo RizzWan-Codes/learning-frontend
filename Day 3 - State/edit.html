@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Example</title>
+
+    <style>
+        li {
+            margin-bottom: 10px;
+        }
+        button {
+            margin-left: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<ul id="list"></ul>
+
+<script>
+
+    let items = [
+        { id: 1, text: "Apple" },
+        { id: 2, text: "Banana" },
+        { id: 3, text: "Orange" }
+    ];
+
+    const list = document.getElementById("list");
+
+    let editingId = null;
+
+    function render () {
+        list.innerHTML = "";
+
+        for (let i = 0; i < items.length; i++){
+            const item = items[i];
+            const li = document.createElement("li");
+
+            if (editingId === item.id) {
+
+                const input = document.createElement("input");
+                input.value = item.text;
+
+                const saveBtn = document.createElement("button");
+                saveBtn.textContent = "Save";
+                saveBtn.dataset.id = item.id;
+
+                const cancelBtn = document.createElement("button");
+                cancelBtn.textContent = "Cancel";
+
+                li.appendChild(input);
+                li.appendChild(saveBtn);
+                li.appendChild(cancelBtn);
+            } else {
+
+                li.textContent = item.text;
+
+                const editBtn = document.createElement("button");
+                editBtn.textContent = "Edit";
+                editBtn.dataset.id = item.id;
+
+                li.appendChild(editBtn);
+            }
+
+            list.appendChild(li);
+        }
+    }
+
+    list.addEventListener("click", function (event) {
+        const id = Number(event.target.dataset.id);
+
+        if (event.target.textContent === "Edit") {
+            editingId = id;
+            render();
+        }
+
+        if (event.target.textContent === "Save") {
+            const input = event.target.previousSibling;
+            const newText = input.value;
+
+            items = items.map ( item =>
+                item.id === id ? {...item, text: newText} : item
+            );
+
+            editingId = null;
+            render();
+        }
+
+        if (event.target.textContent === "Cancel") {
+            editingId = null;
+            render();
+        }
+    });
+
+    render();
+
+</script>
+
+</body>
+</html>

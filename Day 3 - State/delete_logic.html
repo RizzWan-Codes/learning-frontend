@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>State Delete Challenge</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: #f9fafb;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            width: 320px;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            background: #e5e7eb;
+            border-radius: 10px;
+        }
+
+        button {
+            border: none;
+            background: crimson;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: darkred;
+        }
+
+        #empty {
+            margin-top: 20px;
+            color: gray;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Items</h2>
+
+    <ul id="list"></ul>
+    <p id="empty"></p>
+
+    <script>
+        let fruits = ["Apple", "Banana", "Orange", "Guava", "Mango"];
+
+        const list = document.getElementById("list");
+        const message = document.getElementById("empty");
+
+        function render () {
+            list.innerHTML = "";
+
+            for (let i = 0; i < fruits.length; i++){
+                let li = document.createElement("li");
+                li.textContent = fruits[i];
+
+                let deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "Delete";
+                deleteBtn.dataset.id = i;
+
+                li.appendChild(deleteBtn);
+                list.appendChild(li);
+            }
+
+            if (fruits.length === 0){
+                message.textContent = "No items left!";
+            } else{
+                message.textContent = "";
+            }
+        }
+
+        list.addEventListener("click", function (event) {
+           if (event.target.tagName !== "BUTTON") return;
+
+            const index = event.target.dataset.id;
+            fruits.splice(index, 1);
+
+            render();
+        });
+
+        render();
+    </script>
+
+</body>
+</html>

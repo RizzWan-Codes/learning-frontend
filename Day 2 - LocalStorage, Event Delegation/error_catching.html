@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Break the Fetch</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+
+        #status {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .loading {
+            color: gray;
+        }
+
+        .error {
+            color: crimson;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            width: 300px;
+        }
+
+        li {
+            padding: 10px;
+            background: #f3f4f6;
+            margin-bottom: 8px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Users</h2>
+    <div id="status"></div>
+    <ul id="list"></ul>
+
+    <script>
+        const status = document.getElementById("status");
+        const list = document.getElementById("list");
+        const url = "http://localhost:3000";
+
+        async function fetchData () {
+            status.textContent = "Loading...";
+            status.className = "loading";
+
+            try{
+            const response = await fetch(url);
+            if (!response.ok){
+            throw new Error("Request Failed!");
+            }
+            const data = await response.json();
+            status.textContent = "";
+            for (let i = 0; i < data.length; i++){
+            const li = document.createElement("li");
+            li.textContent = data[i].name;
+            list.appendChild(li);   
+            }
+            } catch (err) {
+                status.textContent = "Error Loading Data!"
+                status.className = "error";
+            }
+
+        }
+
+        fetchData();
+    </script>
+
+</body>
+</html>

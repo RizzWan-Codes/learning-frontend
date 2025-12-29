@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Derived UI Counter</title>
+</head>
+<body>
+
+    <h2 id="count">0</h2>
+    <button id="inc">+</button>
+    <button id="dec">-</button>
+
+    <script>
+        const display = document.getElementById("count");
+        const incrementBtn = document.getElementById("inc");
+        const decrementBtn = document.getElementById("dec");
+        let count = 0;
+
+        
+
+        function increment () {
+            count++;
+            renderDisplay();
+        }
+
+        function decrement () {
+            count--;
+            renderDisplay();
+        }
+
+        function renderDisplay () {
+            if (count === 0) {
+            decrementBtn.disabled = true;
+            display.style.color = "Red";
+        } else if (count > 0) {
+            decrementBtn.disabled = false;
+            display.style.color = "Green";
+        }
+            display.textContent = count;
+        }
+
+        incrementBtn.addEventListener("click", increment);
+        decrementBtn.addEventListener("click", decrement);
+
+
+        renderDisplay();
+    </script>
+
+</body>
+</html>

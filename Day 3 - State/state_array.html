@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>State List Challenge</title>
+</head>
+
+<style>
+    body{
+        width: 100vh;
+        overflow-x: hidden;
+    }
+    .listItem{
+        width: fit-content;
+        height: 23px;
+        padding: 7px;
+        border-style: dotted;
+        margin-bottom: 10px;
+        border: 1px;
+        background-color: rgb(162, 162, 162);
+        color: black;
+        border-radius: 12px;
+    }
+</style>
+<body>
+
+    <div class="main">
+    <h2>Items</h2>
+
+    <input id="input" placeholder="Enter item">
+    <button id="add">Add</button>
+
+    <ul id="list"></ul>
+</div>
+    <script>
+        
+        let items = [];
+        const input = document.getElementById("input");
+        const addBtn = document.getElementById("add");
+        const list = document.getElementById("list");
+
+        function addItem () {
+            if (input.value === "") return;
+
+            items.push(input.value);
+            renderList();
+        }
+
+        
+
+        function renderList () {
+
+            list.innerHTML = "";
+            for (let i = 0; i < items.length; i++){
+            let li = document.createElement("li");
+            li.textContent = items[i];
+            li.className = "listItem";
+            list.appendChild(li);
+            }
+            input.value = "";
+        }
+
+        addBtn.addEventListener("click", addItem);
+
+        renderList();
+    </script>
+
+</body>
+</html>

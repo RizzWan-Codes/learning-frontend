@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>State Counter</title>
+</head>
+<body>
+
+    <h2 id="count">0</h2>
+    <button id="inc">+</button>
+    <button id="dec">-</button>
+
+    <script>
+        // Set the STATE as count starting from 0. This does not give chance to DOM to form logic. We just use it for changing
+        // textcontent.
+        let count = 0;
+
+        const display = document.querySelector("#count");
+        const increment = document.querySelector("#inc");
+        const decrement = document.querySelector("#dec");
+        
+
+        function incrementFunc () {
+            count++;
+            render();
+        }
+
+        function decrementFunc () {
+            count--;
+            render();
+        }
+
+        function render() {
+            display.textContent = count;
+        }
+
+        increment.addEventListener("click", incrementFunc);
+        decrement.addEventListener("click", decrementFunc);
+
+        
+
+        render();
+        
+    </script>
+
+</body>
+</html>

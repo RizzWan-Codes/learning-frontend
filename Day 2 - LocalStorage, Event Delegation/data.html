@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delegation Challenge</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            width: 300px;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            margin-bottom: 10px;
+            background: #f3f4f6;
+            border-radius: 10px;
+        }
+
+        button {
+            border: none;
+            background: crimson;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Smart List</h2>
+
+    <ul id="list">
+        <li data-id="1">
+            Apple
+            <button data-id="1">Delete</button>
+        </li>
+
+        <li data-id="2">
+            Banana
+            <button data-id="2">Delete</button>
+        </li>
+
+        <li data-id="3">
+            Orange
+            <button data-id="3">Delete</button>
+        </li>
+    </ul>
+
+    <script>
+        const listData = document.querySelector("#list");
+
+        listData.addEventListener("click", function (event) {
+            
+
+            if (event.target.tagName === "BUTTON") {
+                event.target.parentElement.remove();
+                let datasetId = event.target.dataset.id;
+                console.log(`Deleted Item With Id ${datasetId}`)
+            }
+
+            if (event.target.tagName === "LI") {
+                console.log(`Item Clicked ${event.target.dataset.id}`)
+            }
+        });
+    </script>
+
+</body>
+</html>

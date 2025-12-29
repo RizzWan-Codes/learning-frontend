@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Challenge</title>
+
+    <style>
+        body{
+            height: 92.5vh;
+            background: linear-gradient(to top left, rgb(60, 60, 60), white);
+            overflow-y: hidden;
+        }
+        .main{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 90px;
+        }
+
+        input{
+            width: 200px;
+            margin-top: 150px;
+            height: 50px;
+            font-size:xx-large;
+            text-align: center;
+        }
+
+        .increment{
+            margin-right: 150px;
+        }
+
+        .decrement{
+            margin-right: 150px;
+        }
+
+        button{
+            height: 50px;
+            width: 120px;
+            font-size: 15px;
+            background-color: bisque;
+            border: none;
+            border-radius: 25px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="main">
+        <input type="number" id="inputCon" readonly>
+    </div>
+
+    <div class="main">
+        <button class="increment" id="increment">Increase By 1</button>
+        <button class="decrement" id="decrement">Decrease By 1</button>
+        <button class="reset" id="reset">Reset</button>
+    </div>
+
+    <script>
+        const inputCon = document.querySelector("#inputCon");
+        const incrementBtn = document.querySelector("#increment");
+        const decrementBtn = document.querySelector("#decrement");
+        const resetBtn = document.querySelector("#reset");
+        
+
+        
+        let savedNum = localStorage.getItem("Number");
+
+        if (savedNum === null) {
+        savedNum = 0;
+        }
+
+        inputCon.value = savedNum;
+
+        if (Number(savedNum) === 0) {
+        inputCon.style.color = "Red";
+        decrementBtn.disabled = true;
+        } else {
+        inputCon.style.color = "Green";
+        decrementBtn.disabled = false;
+        }
+
+        
+
+        incrementBtn.addEventListener("click", function () {
+            inputCon.value = Number(inputCon.value) + 1;
+            let currentNum = inputCon.value;
+            decrementBtn.disabled = false;
+            inputCon.style.color = "Green";
+            localStorage.setItem("Number", currentNum);
+            console.log(currentNum);
+        });
+
+        decrementBtn.addEventListener("click", function () {
+            inputCon.value = Number(inputCon.value) - 1;
+            let currentNum = inputCon.value;
+                    if (Number(inputCon.value) === 0){
+                decrementBtn.disabled = true;
+                inputCon.style.color = "Red";
+        }
+        localStorage.setItem("Number", currentNum);
+        console.log(currentNum);
+        });
+
+        resetBtn.addEventListener("click", function () {
+            inputCon.value = 0;
+            decrementBtn.disabled = true;
+            inputCon.style.color = "Red";
+            let currentNum = inputCon.value;
+            localStorage.setItem("Number", currentNum);
+            console.log(currentNum);
+        });
+
+    
+        
+    
+    </script>
+</body>
+</html>

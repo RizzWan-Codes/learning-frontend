@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 3</title>
+
+    <style>
+        body{
+            height: 100vh;
+            overflow-y: hidden;
+            background-color: rgb(6, 0, 55);
+        }
+
+        .main{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main" id="main">
+
+        <ul id="list">
+
+        </ul>
+
+    </div>
+
+
+    <script>
+        let colors = ["red", "blue", "green"];
+
+        const list = document.querySelector("#list");
+
+        function checkStorageAndFetch (colors) {
+           let fetchItem = JSON.parse(localStorage.getItem("colors"));
+           if (fetchItem === null){
+                console.log("No Array Found!");
+                 addStorage();
+                 fetchItem = colors;
+           }
+
+           for (let i = 0; i < fetchItem.length; i++){
+                let li = document.createElement("li");
+                li.textContent = fetchItem[i];
+                li.style.color = "White";
+                li.style.fontSize = "xx-large"
+                list.appendChild(li);
+           }
+           
+        }
+
+         function addStorage () {
+            localStorage.setItem("colors", JSON.stringify(colors));
+        }
+
+        checkStorageAndFetch(colors);
+
+    </script>
+</body>
+</html>

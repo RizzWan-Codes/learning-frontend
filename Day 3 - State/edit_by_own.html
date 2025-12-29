@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inline Edit Challenge</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: #f9fafb;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            width: 360px;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            gap: 8px;
+        }
+
+        input {
+            flex: 1;
+            padding: 6px 8px;
+            font-size: 14px;
+        }
+
+        button {
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .edit {
+            background: #2563eb;
+            color: white;
+        }
+
+        .save {
+            background: #16a34a;
+            color: white;
+        }
+
+        .delete {
+            background: crimson;
+            color: white;
+        }
+
+        #empty {
+            margin-top: 20px;
+            color: gray;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Items</h2>
+
+    <ul id="list"></ul>
+    <p id="empty"></p>
+
+    <script>
+        let veggies = [
+            {id: 1, name: "Broccoli"},
+            {id: 2, name: "Capsicum"},
+            {id: 3, name: "Cucumber"},
+            {id: 4, name: "Cauliflower"},
+            {id: 5, name: "Cabbage"}
+        ];
+
+        const list = document.getElementById("list");
+        const message = document.getElementById("empty");
+
+        let editingId = null;
+
+        function render () {
+            list.innerHTML = "";
+
+            for (let i = 0; i < veggies.length; i++) {
+                const veggie = veggies[i];
+                const li = document.createElement("li");
+                li.style.color = "Black";
+
+                if (editingId === veggie.id) {
+
+                    const input = document.createElement("input");
+                    input.value = veggie.name;
+
+                    const saveBtn = document.createElement("button");
+                    saveBtn.textContent = "Save";
+                    saveBtn.dataset.id = veggie.id;
+                    saveBtn.className = "save";
+
+                    li.appendChild(input)
+                    li.appendChild(saveBtn);
+
+                } else {
+                    li.textContent = veggie.name;
+
+                    const editBtn = document.createElement("button");
+                    editBtn.textContent = "Edit";
+                    editBtn.dataset.id = veggie.id;
+                    editBtn.className = "edit"
+
+                    const deleteBtn = document.createElement("button");
+                    deleteBtn.textContent = "Delete";
+                    deleteBtn.dataset.id = veggie.id;
+                    deleteBtn.className = "delete"
+
+                    li.appendChild(editBtn);
+                    li.appendChild(deleteBtn);
+                }
+
+                list.appendChild(li);
+            }
+
+            if (veggies.length === 0) {
+                message.textContent = "Veggies Eaten!";
+            } else{
+                message.textContent = "";
+            }
+            
+        }
+
+        list.addEventListener("click", function (event) {
+            const id = Number(event.target.dataset.id);
+
+            if (event.target.textContent === "Edit") {
+                editingId = id;
+                render();
+            }
+
+            if (event.target.textContent === "Delete") {
+                veggies = veggies.filter(veggie => veggie.id !== id)
+                editingId = null;
+                
+                render();
+            }
+
+            if (event.target.textContent === "Save") {
+                const input = event.target.previousSibling;
+                const newText = input.value;
+
+                veggies= veggies.map(veggie =>
+                    veggie.id === id ? {...veggie, name: newText} : veggie
+                );
+
+                editingId = null;
+
+                render();
+            }
+
+            
+
+        });
+
+        render();
+    </script>
+
+</body>
+</html>

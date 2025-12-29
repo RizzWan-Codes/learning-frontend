@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ID Delete Challenge</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            width: 300px;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #f3f4f6;
+            border-radius: 6px;
+        }
+
+        button {
+            background: crimson;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 12px;
+        }
+
+        #empty {
+            margin-top: 20px;
+            color: gray;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Items</h2>
+
+    <ul id="list"></ul>
+    <p id="empty"></p>
+
+    <script>
+        let names = [
+            {id: 1, name: "Rizwan"},
+            {id: 2, name: "Zayyan"},
+            {id: 3, name: "Shareque"},
+            {id: 4, name: "Tareque"},
+            {id: 5, name: "Asma MoM"}
+        ]
+
+        const list = document.getElementById("list");
+        const message = document.getElementById("empty");
+
+        function renderList (){
+            list.innerHTML = "";
+
+            for (let i = 0; i < names.length; i++){
+                let li = document.createElement("li");
+                li.textContent = names[i].name;
+
+                let deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "Delete";
+                deleteBtn.dataset.id = names[i].id;
+
+                li.appendChild(deleteBtn);
+                list.appendChild(li);
+
+            }
+
+            if (names.length === 0) {
+                message.textContent = "No items left!";
+            } else{
+                message.textContent = "";
+            }
+        }
+
+        list.addEventListener("click", function (event) {
+            if (event.target.tagName !== "BUTTON") return;
+
+            let id = Number(event.target.dataset.id);
+
+            names = names.filter(namesWithId => namesWithId.id !== id);
+
+            renderList();
+        });
+
+        renderList();
+    </script>
+
+</body>
+</html>
