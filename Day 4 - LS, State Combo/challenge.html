@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Persistent State Challenge</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: #f9fafb;
+        }
+
+        h2 {
+            margin-bottom: 16px;
+        }
+
+        input {
+            padding: 8px;
+            font-size: 14px;
+            width: 200px;
+        }
+
+        button {
+            padding: 8px 12px;
+            margin-left: 6px;
+            cursor: pointer;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            width: 300px;
+        }
+
+        li {
+            padding: 10px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        #empty {
+            margin-top: 16px;
+            color: gray;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Notes</h2>
+
+    <input id="input" placeholder="New note">
+    <button id="add">Add</button>
+
+    <ul id="list"></ul>
+    <p id="empty"></p>
+
+    <script>
+        let notes = JSON.parse(localStorage.getItem("notes")) || [];
+
+        const input = document.getElementById("input");
+        const addBtn = document.getElementById("add");
+
+        const list = document.getElementById("list");
+        const message = document.getElementById("empty");
+        let editingId = null;
+
+        function render () {
+            list.innerHTML = "";
+
+            for (let i = 0; i < notes.length; i++){
+                const li = document.createElement("li");
+
+                li.textContent = notes[i];
+
+                list.appendChild(li);
+            }
+
+            if (notes.length === 0){
+                message.textContent = "No Notes Available!"
+            } else{
+                message.textContent = "";
+            }
+
+        }
+
+        addBtn.addEventListener("click", function (event) {
+            
+            let NoteAddedByUser = input.value;
+
+            if (NoteAddedByUser === "") return;
+
+            notes.push(NoteAddedByUser);
+
+            localStorage.setItem("notes", JSON.stringify(notes));
+
+            input.value = "";
+
+            render();
+        });
+
+        render();
+    </script>
+
+</body>
+</html>
