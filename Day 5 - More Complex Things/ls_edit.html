@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users App</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: #f9fafb;
+        }
+
+        h2 {
+            margin-bottom: 16px;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 8px;
+            font-size: 14px;
+            width: 200px;
+            border: none;
+        }
+
+        button {
+            padding: 8px 12px;
+            margin-left: 6px;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .add {
+            background: #2563eb;
+            color: white;
+        }
+
+        .edit {
+            background: #16a34a;
+            color: white;
+        }
+
+        .save {
+            background: #4b00c5;
+            color: white;
+        }
+
+        .cancel {
+            background: #ff0000;
+            color: rgb(255, 255, 255);
+        }
+
+        .delete {
+            background: crimson;
+            color: white;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            width: 360px;
+            margin-top: 20px;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            gap: 8px;
+        }
+
+        .item-text {
+            flex: 1;
+        }
+
+        .edit-input{
+            background-color: white;
+        }
+
+        #empty {
+            margin-top: 16px;
+            color: gray;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Users</h2>
+
+    <div class="controls">
+        <input id="input" placeholder="Enter name">
+        <button id="add" class="add">Add</button>
+    </div>
+
+    <ul id="list">
+    </ul>
+
+    <p id="empty"></p>
+
+    <script>
+        let state = JSON.parse(localStorage.getItem("names")) || [];
+
+        const input = document.getElementById("input");
+        const addBtn = document.getElementById("add");
+
+        const list = document.getElementById("list");
+        const message = document.getElementById("empty");
+        let editingId = null;
+
+        function saveToLS () {
+            localStorage.setItem("names", JSON.stringify(state));
+        }
+
+        function render () {
+            list.innerHTML = "";
+
+            for (let i = 0; i < state.length; i++){
+                const li = document.createElement("li");
+
+                if (editingId === state[i].id){
+                    const editInput = document.createElement("input");
+                    editInput.value = state[i].text;
+                    editInput.className = "edit-input";
+
+                    const saveBtn = document.createElement("button");
+                    saveBtn.textContent = "Save";
+                    saveBtn.dataset.id = state[i].id;
+                    saveBtn.className = "save";
+
+                    const cancelBtn = document.createElement("button");
+                    cancelBtn.textContent = "Cancel";
+                    cancelBtn.dataset.id = state[i].id;
+                    cancelBtn.className = "cancel";
+
+                    editInput.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter"){
+                    saveBtn.click();
+                    }
+
+                    if (e.key === "Escape"){
+                    cancelBtn.click();
+                    }
+                });
+
+                editInput.focus();
+                editInput.select();
+
+                    li.appendChild(editInput);
+                    li.appendChild(saveBtn);
+                    li.appendChild(cancelBtn);
+                } else{
+                    li.textContent = state[i].text;
+
+                    const editBtn = document.createElement("button");
+                    editBtn.textContent = "Edit";
+                    editBtn.className = "edit";
+                    editBtn.dataset.id = state[i].id;
+                    
+                    const deleteBtn = document.createElement("button");
+                    deleteBtn.textContent = "Delete";
+                    deleteBtn.dataset.id = state[i].id;
+                    deleteBtn.className = "delete";
+
+                    li.appendChild(editBtn);
+                    li.appendChild(deleteBtn);
+                }
+
+                list.appendChild(li);
+            }
+
+            if (state.length === 0){
+                message.textContent = "No Names Here!";
+            } else{
+                message.textContent = "";
+            }
+            
+        }
+
+        addBtn.addEventListener("click", function () {
+            let userInput = input.value.trim();
+
+            if (userInput === "") return;
+
+            const newObject = {
+                id: Date.now(),
+                text: userInput
+            };
+
+            state.push(newObject);
+            saveToLS();
+
+            render();
+
+            input.value = "";
+
+        });
+
+        list.addEventListener("click", function(event) {
+            
+            if (event.target.tagName === "LI") return;
+            let id = Number(event.target.dataset.id);
+
+            if (event.target.textContent === "Edit"){
+                editingId = id;
+                render();
+            }
+
+            if (event.target.textContent === "Delete"){
+                state = state.filter(singleState => singleState.id !== id);
+                editingId = null;
+                saveToLS();
+                render();
+            }
+
+            if (event.target.textContent === "Save"){
+
+                const li = event.target.parentElement;
+                const input = li.querySelector(".edit-input");
+                
+                state = state.map (singleState =>
+                    singleState.id === id ? {...singleState, text: input.value} : singleState
+                );
+                editingId = null;
+                saveToLS();
+                render();
+            }
+
+            if(event.target.textContent === "Cancel"){
+                editingId = null;
+                render();
+            }
+        });
+
+        input.addEventListener("keydown", function (e) {
+            if (e.key === "Enter"){
+                addBtn.click();
+            }
+        });
+
+
+        render();
+    </script>
+
+</body>
+</html>
