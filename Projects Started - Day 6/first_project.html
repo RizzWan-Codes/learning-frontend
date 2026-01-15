@@ -240,6 +240,7 @@
                 let currentRadioSelected = "all";
                 let lastDeletedTodo = null;
                 let undoTimer = null;
+                let countDownInterval = null;
                 
                 
 
@@ -398,27 +399,47 @@
                 }
 
                 function handleDelete (id) {
+                    clearTimeout(undoTimer);
+                    clearInterval(countDownInterval);
                     lastDeletedTodo = todos.find(todo => todo.id === id);
 
                     todos = todos.filter(todo => todo.id !== id);
 
-                    clearTimeout(undoTimer);
+                    saveToLocalStorage();
+                    render();
+
+                    let secondsLeft = 5;
+                    message.innerHTML = `Item deleted successfully! Press <strong>U</strong> to bring item back. ${secondsLeft}s left before permanent delete.`
+
+                    countDownInterval = setInterval(() => {
+                    secondsLeft--;
+                    if(secondsLeft > 0){
+                        message.innerHTML = `Item deleted successfully! Press <strong>'U'</strong> to bring item back. ${secondsLeft}s left before permanent delete.`
+                    } else {
+                        clearInterval(countDownInterval);
+                        
+                    }
+                    }, 1000);
 
                     undoTimer = setTimeout(() => {
                         lastDeletedTodo = null;
-                        alert("Item permanently deleted from temprory memory!");
+                        clearInterval(countDownInterval);
+
+                        message.textContent = "Item Deleted Successfully!";
+                        setTimeout(() => {
+                            render();
+                        }, 2000);
                     }, 5000);
 
-                    saveToLocalStorage();
                     render();
                 }
 
                 function undoDelete () {
                     if (lastDeletedTodo) {
                         todos.push(lastDeletedTodo);
-
+                        lastDeletedTodo = null;
                         clearTimeout(undoTimer);
-
+                        
                         saveToLocalStorage();
                         render();
                     }
