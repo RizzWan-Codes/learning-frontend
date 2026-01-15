@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Derived State Challenge</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: #f9fafb;
+        }
+
+        h2 {
+            margin-bottom: 8px;
+        }
+
+        #status {
+            margin-bottom: 20px;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        #controls {
+            margin-bottom: 20px;
+        }
+
+        #input {
+            padding: 8px;
+            font-size: 14px;
+            width: 220px;
+        }
+
+        #addBtn {
+            padding: 8px 12px;
+            margin-left: 6px;
+            border: none;
+            border-radius: 6px;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+
+        #addBtn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            width: 360px;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            background: #e5e7eb;
+            border-radius: 10px;
+        }
+
+        .text {
+            flex: 1;
+        }
+
+        .editInput {
+            flex: 1;
+            padding: 6px;
+        }
+
+        .editBtn {
+            background: #16a34a;
+            color: white;
+        }
+
+        .saveBtn {
+            background: #4b00c5;
+            color: white;
+        }
+
+        .cancelBtn {
+            background: #dc2626;
+            color: white;
+        }
+
+        .deleteBtn {
+            background: crimson;
+            color: white;
+        }
+
+        button {
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        #empty {
+            margin-top: 20px;
+            color: gray;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Users</h2>
+    <div id="status"></div>
+
+    <div id="controls">
+        <input id="input" placeholder="Enter name">
+        <button id="addBtn">Add</button>
+    </div>
+
+    <ul id="list"></ul>
+
+    <p id="empty"></p>
+
+</body>
+</html>

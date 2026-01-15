@@ -1,0 +1,549 @@
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Todo App</title>
+            <script src="https://cdn.jsdelivr.net/npm/@hiseb/confetti@2.1.0/dist/confetti.min.js"></script>
+
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+                body {
+                    font-family: Arial, sans-serif;
+                    padding: 40px;
+                    background: #f9fafb;
+                }
+
+                h2 {
+                    margin-bottom: 16px;
+                }
+
+                .controls {
+                    margin-bottom: 20px;
+                    
+                }
+
+                input {
+                    padding: 8px;
+                    font-size: 14px;
+                    width: 220px;
+                }
+
+                button {
+                    padding: 8px 12px;
+                    margin-left: 6px;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 13px;
+                }
+
+                .add {
+                    background: #2563eb;
+                    color: white;
+                }
+
+                .edit {
+                    background: #16a34a;
+                    color: white;
+                }
+
+                .completed {
+                    color: white;
+                    background-color: darkkhaki;
+                }
+
+                .save {
+                    background: #4b00c5;
+                    color: white;
+                }
+
+                .delete {
+                    background: crimson;
+                    color: white;
+                }
+
+                .cancel {
+                    background: gray;
+                    color: white;
+                }
+
+                ul {
+                    list-style: none;
+                    padding: 0;
+                    width: 360px;
+                    margin-top: 20px;
+                }
+
+                li {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 8px;
+                    padding: 12px 16px;
+                    margin-bottom: 10px;
+                    background: #e5e7eb;
+                    border-radius: 10px;
+                }
+
+                .text {
+                    flex: 1;
+                }
+
+                .done{
+                    text-decoration: line-through;
+                    opacity: 0.6;
+                }
+
+                .edit-input {
+                    flex: 1;
+                    padding: 6px;
+                }
+
+                .noedit{
+                    opacity: 0.7;
+                    background-color: #16a34a;
+                    color: rgb(20, 20, 20);
+                    cursor: not-allowed;
+                }
+
+                #empty {
+                    margin-top: 16px;
+                    color: gray;
+                    font-style: italic;
+                }
+
+                #searchInput {
+                    margin-left: 75px;
+                }
+
+    .searchingSect {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    width: fit-content;
+}
+
+
+#searchInput {
+    margin-left: 0 !important;
+    width: 200px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+}
+
+.searchingSect label {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    color: #374151;
+}
+
+
+.searchingSect input[type="radio"] {
+    width: auto;
+    margin: 0;
+    cursor: pointer;
+}
+
+.stats{
+    font-family: Poppins;
+}
+
+.stats #sortAZ, #sortZA{
+    margin-bottom: 30px;
+    margin-right: 80px;
+    color: black;
+    background-color: rgb(183, 255, 141);
+    font-weight: bold;
+}
+
+.stats #exportJSON, #importJSON{
+    color: black;
+    font-weight: bold;
+    background-color: rgb(122, 228, 255);
+    margin-right: 80px;
+}
+
+            </style>
+        </head>
+        <body>
+
+            <h2>Todos</h2>
+
+            <div class="stats">
+            <h4>All Todos: <span id="allTodo"></span></h4>
+            <h4>Completed Todos: <span id="completedTodo"></span></h4>
+            <h4>Pending Todo: <span id="pendingTodo"></span></h4>
+
+            <button id="sortAZ">Sort A - Z</button>
+            <button id="sortZA">Sort Z - A</button>
+
+            <button id="exportJSON">Export As JSON File</button>
+    
+            <input type="file" id="importJSON" accept=".json">
+        
+            </div>
+
+            <div class="controls">
+                <input id="input" placeholder="New todo">
+                <button id="add" class="add">Add</button>
+            </div>
+
+            <div class="searchingSect">
+                <input id="searchInput" placeholder="Search Todos">
+                <label>
+                    All
+                    <input type="radio" name="filter" value="all" checked>
+                </label>
+                <label>
+                    Completed     
+                    <input type="radio" name="filter" value="completed">               
+                </label>
+                <label>
+                    Pending
+                    <input type="radio" name="filter" value="pending">
+                </label>
+            </div>
+
+            <ul id="list">
+                
+            </ul>
+
+            <p id="empty"></p>
+
+            <script>
+                const newTodoInput = document.getElementById("input");
+                const addBtn = document.getElementById("add");
+                const list = document.getElementById("list");
+                const message = document.getElementById("empty");
+                const searchTodo = document.getElementById("searchInput");
+                const radioBtns = document.querySelectorAll("input[name='filter']");
+                const allStat = document.getElementById("allTodo");
+                const completedStat = document.getElementById("completedTodo");
+                const pendingStat = document.getElementById("pendingTodo");
+                const sortAZ = document.getElementById("sortAZ");
+                const sortZA = document.getElementById("sortZA");
+                const exportJSON = document.getElementById("exportJSON");
+                const importJSON = document.getElementById("importJSON");
+
+                let editingId = null;
+                let todos = JSON.parse(localStorage.getItem("todoArr")) || [];
+                let wasAlreadyCompleted = false;
+                let searchQuery = "";
+                let currentRadioSelected = "all";
+                let lastDeletedTodo = null;
+                let undoTimer = null;
+                
+                
+
+                function saveToLocalStorage () {
+                    localStorage.setItem("todoArr", JSON.stringify(todos));
+                }
+
+                function render () {
+                    list.innerHTML = "";
+                    searchTodo.disabled = false;
+                    radioBtns.forEach (radio =>
+                                radio.disabled = false,
+                            )
+                    searchTodo.placeholder = "Search Todos..."
+                    
+                    let visibleTodos = todos.filter(todo =>
+                            todo.text.toLowerCase().includes(searchQuery)
+                        );
+
+                    if (currentRadioSelected === "completed"){
+                        visibleTodos = visibleTodos.filter(todo => todo.completed);
+                    }
+
+                    if (currentRadioSelected === "pending"){
+                        visibleTodos = visibleTodos.filter(todo => !todo.completed);
+                    }
+                    
+                    const hasTodos = todos.length > 0;
+                    const allCompleted = hasTodos && todos.every(todo => todo.completed === true);
+                    
+                    if (allCompleted && !wasAlreadyCompleted){
+                        confetti();
+                    }
+
+                    wasAlreadyCompleted = allCompleted;
+
+                    if (!hasTodos) {
+        message.textContent = "No Todo's Yet!";
+    } else if (allCompleted) {
+        message.textContent = "All Tasks Completed!";
+    } else if (visibleTodos.length === 0) {
+        message.textContent = "No matching searches!";
+    } 
+    else {
+        message.textContent = "You have tasks to do!";
+    }
+
+    const completedCount = todos.filter(todo => todo.completed).length;
+                        const pendingCount = todos.filter(todo => !todo.completed).length;
+
+                        allStat.textContent = Number(todos.length);
+                        completedStat.textContent = completedCount;
+                        pendingStat.textContent = pendingCount;
+
+                    for (let i = 0; i < visibleTodos.length; i++){
+                        const todo = visibleTodos[i];
+                        const li = document.createElement("li");
+                        li.style.color = "Black";
+
+                        if (editingId === todo.id){
+                            const input = document.createElement("input");
+                            input.value = todo.text;
+
+                            const saveBtn = document.createElement("button");
+                            saveBtn.textContent = "Save";
+                            saveBtn.dataset.id = todo.id;
+                            saveBtn.className = "save";
+
+                            saveBtn.disabled = input.value.trim() === "";
+
+                            input.addEventListener("input", function () {
+                                saveBtn.disabled = input.value.trim() === "";
+                            });
+
+                            const cancelBtn = document.createElement("button");
+                            cancelBtn.textContent = "Cancel";
+                            cancelBtn.dataset.id = todo.id;
+                            cancelBtn.className = "cancel";
+
+                            searchTodo.disabled = true;
+                            searchTodo.placeholder = "Complete Editing Your Todo...";
+
+                            radioBtns.forEach (radio =>
+                                radio.disabled = (editingId !== null),
+                            )
+
+                            input.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter"){
+                        saveBtn.click();
+                    } 
+                    
+                    if (e.key === "Escape"){
+                        cancelBtn.click();
+                    }
+
+                });
+
+                            li.appendChild(input);
+                            li.appendChild(saveBtn);
+                            li.appendChild(cancelBtn);
+
+                            setTimeout(() => input.focus(), 0);
+
+                        } else {
+                            
+                        const span = document.createElement("span");
+                        span.textContent = todo.text;
+                        span.className = "text";
+
+                            const editBtn = document.createElement("button");
+                            editBtn.textContent = "Edit";
+                            editBtn.dataset.id = todo.id;
+                            editBtn.className = "edit";
+
+                            const deleteBtn = document.createElement("button");
+                            deleteBtn.textContent = "Delete";
+                            deleteBtn.dataset.id = todo.id;
+                            deleteBtn.className = "delete";
+
+                            const completedBtn = document.createElement("button");
+                            completedBtn.textContent = "✔️";
+                            completedBtn.dataset.id = todo.id;
+                            completedBtn.className = "completed";
+
+                            
+
+                            if (todo.completed){
+                            span.className = "done";
+                            editBtn.disabled = true;
+                            editBtn.className = "noedit";
+
+                        }
+
+                            li.appendChild(span);
+                            li.appendChild(completedBtn);
+                            li.appendChild(editBtn);
+                            li.appendChild(deleteBtn);
+                        }
+
+                        list.appendChild(li);
+                    }
+                }
+
+                function ExportTodo () {
+                    const data = JSON.stringify(todos, null, 2);
+                    const blob = new Blob([data], {type: "application/json"});
+
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+
+                    a.href = url;
+                    a.download = "todos.json";
+                    a.click();
+
+                    URL.revokeObjectURL(url);
+                }
+
+                function handleDelete (id) {
+                    lastDeletedTodo = todos.find(todo => todo.id === id);
+
+                    todos = todos.filter(todo => todo.id !== id);
+
+                    clearTimeout(undoTimer);
+
+                    undoTimer = setTimeout(() => {
+                        lastDeletedTodo = null;
+                        alert("Item permanently deleted from temprory memory!");
+                    }, 5000);
+
+                    saveToLocalStorage();
+                    render();
+                }
+
+                function undoDelete () {
+                    if (lastDeletedTodo) {
+                        todos.push(lastDeletedTodo);
+
+                        clearTimeout(undoTimer);
+
+                        saveToLocalStorage();
+                        render();
+                    }
+                }
+
+                addBtn.addEventListener("click", function () {
+
+                    if (newTodoInput.value === ""){
+                        return;
+                    }
+
+                    const newObject = {
+                        text: newTodoInput.value.trim(),
+                        id: crypto.randomUUID(),
+                        completed: false
+                    }
+
+                    todos.push(newObject);
+
+                    saveToLocalStorage ();
+
+                    newTodoInput.value = "";
+
+                    render();
+                });
+
+                list.addEventListener("click", function (event) {
+                    const target = event.target;
+                    const id = event.target.dataset.id;
+
+                    if (target.classList.contains("edit")){
+                        editingId = id;
+                        render();
+                    }
+
+                    if (target.classList.contains("save")){
+                        const parentLi = event.target.closest("li");
+                        const input = parentLi.querySelector("input");
+                        todos = todos.map(todo =>
+                            todo.id === id ? {...todo, text: input.value} : todo
+                        );
+                        saveToLocalStorage ();
+                        editingId = null;
+                        render();
+                    }
+
+                    if (target.classList.contains("cancel")) {
+                        editingId = null;
+                        render();
+                    }
+
+                    if (target.classList.contains("delete")){
+                        
+                        let id = target.dataset.id;
+
+                        handleDelete(id);
+                    }
+
+                    if (target.classList.contains("completed")){
+
+                    todos = todos.map(todo =>
+                        todo.id === id ? {...todo, completed: !todo.completed} : todo
+                    );
+
+                    saveToLocalStorage();
+                    render();
+
+                    }
+                });
+
+                newTodoInput.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter"){
+                        addBtn.click();
+                    }
+                });
+
+                searchTodo.addEventListener("input", function () {
+                searchQuery = searchTodo.value.toLowerCase(); 
+                render(); 
+        });
+
+        radioBtns.forEach (radio =>
+            radio.addEventListener("change", function (e) {
+                currentRadioSelected = e.target.value;
+                render();
+            })
+        );
+
+        sortAZ.addEventListener("click", function () {
+            todos = todos.sort((a, b) => a.text.toLowerCase().localeCompare(b.text.toLowerCase()));
+            saveToLocalStorage();
+            render();
+        });
+
+        sortZA.addEventListener("click", function () {
+            todos = todos.sort((a, b) => b.text.toLowerCase().localeCompare(a.text.toLowerCase()));
+            saveToLocalStorage();
+            render();
+        });
+
+        exportJSON.addEventListener("click", ExportTodo);
+
+        importJSON.addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                const imported = JSON.parse(reader.result);
+                todos = imported;
+                saveToLocalStorage();
+                render();
+            };
+
+            reader.readAsText(file);
+        });
+
+        window.addEventListener("keydown", function (e) {
+            if (e.key === "u" || e.key === "U"){
+                undoDelete();
+            }
+        });
+
+                render();
+            </script>
+
+        </body>
+        </html>
