@@ -37,7 +37,8 @@ li {
 #message {
     font-style: italic;
     font-family: sans-serif;
-    color: rgb(199, 199, 199);
+    color: rgb(227, 227, 227);
+    font-size: x-large;
 } 
 
 /* CSS */

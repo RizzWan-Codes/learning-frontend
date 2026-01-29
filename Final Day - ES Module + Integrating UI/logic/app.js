@@ -95,6 +95,12 @@ function render () {
     list.appendChild(li);
 });
 
+if (todoArr.length === 0) {
+                message.textContent = "No Todos Available!"
+            } else  {
+                message.textContent = "See Your Todos!"
+            }
+
 addBtn.addEventListener("click", function () {
     
     const text = input.value.trim();
