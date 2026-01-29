@@ -95,11 +95,17 @@ function render () {
     list.appendChild(li);
 });
 
-if (todoArr.length === 0) {
-                message.textContent = "No Todos Available!"
-            } else  {
-                message.textContent = "See Your Todos!"
-            }
+let completedCount = todoArr.filter(t => t.completed).length;
+let notCompletedCount = todoArr.filter(t => !t.completed).length;
+let arrlen = todoArr.length;
+
+if (arrlen === 0) {
+    message.textContent = "No Todos Available!"
+    } else if (completedCount == arrlen) {
+    message.textContent = "All Todos Done. Relax..."
+    } else {
+        message.textContent = `${completedCount}/${arrlen} todos Completed`;
+    }
 
 addBtn.addEventListener("click", function () {
     
