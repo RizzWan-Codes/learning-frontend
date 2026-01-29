@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Use</title>
+
+    <style>
+        body {
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: linear-gradient(45deg, #616161, #9bc5c3);
+        }
+
+        input {
+            height: 50px;
+            width: 300px;
+            text-align: center;
+            font-size: xx-large;
+            border-radius: 25px;
+            border: none;
+            margin-bottom: 30px;
+        }
+
+        button {
+            height: 50px;
+            width: 200px;
+            border-radius: 25px;
+            border: solid;
+            border-width: 1px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            font-size: x-large;
+            background-color: rgb(216, 164, 255);
+            font-weight: bold;
+            transition: box-shadow 0.5s ease-in-out, transform 0.3s ease;
+
+        }
+
+        button:hover{
+            box-shadow: 
+            0px 0px 10px white,
+            0px 0px 20px white,
+            0px 0px 30px white;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <input id="input" type="number" readonly>
+
+    <button id="increase">Increase</button>
+    <button id="decrease">Decrease</button>
+    <button id="reset">Reset</button>
+</body>
+
+<script>
+    const increaseBtn = document.getElementById("increase");
+    const decreaseBtn = document.getElementById("decrease");
+    const resetBtn = document.getElementById("reset");
+    const input = document.getElementById("input");
+
+    function saveToLocalStorage () {
+        localStorage.setItem("number", currentNumber);
+    }
+
+    let currentNumber = Number(localStorage.getItem("number") || 0);
+
+    if (currentNumber === 0) {
+        decreaseBtn.disabled = true;
+    }
+
+    input.value = currentNumber;
+
+    increaseBtn.addEventListener("click", function () {
+        currentNumber++;
+        saveToLocalStorage();
+        input.value = currentNumber;
+        decreaseBtn.disabled = false;
+    });
+
+    decreaseBtn.addEventListener("click", function () {
+        if (currentNumber === 0) {
+            decreaseBtn.disabled = true;
+        } else {
+        currentNumber--;
+        saveToLocalStorage();
+        input.value = currentNumber;
+        }
+    });
+
+    resetBtn.addEventListener("click", function () {
+        currentNumber = 0;
+        saveToLocalStorage();
+        input.value = currentNumber;
+        decreaseBtn.disabled = true;
+    });
+
+
+</script>
+</html>

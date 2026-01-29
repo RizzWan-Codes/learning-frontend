@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Await, Fetch, Async, State</title>
+    <style>
+    body {
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(45deg, #336557, #99f2c8);
+    font-family: system-ui, sans-serif;
+}
+
+h1 {
+    color: white;
+    font-size: 3rem;
+    margin-bottom: 30px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    width: 360px;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    background: #e5e7eb;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: dotted;
+}
+
+li:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+}
+
+#message {
+    color: white;
+    font-size: x-large;
+    font-family: sans-serif;
+}
+
+    </style>
+</head>
+<body>
+    <h1>Users</h1>
+
+    <ul id="list">
+
+    </ul>
+    <p id="message">Message</p>
+
+    <script>
+        const list = document.getElementById("list");
+        const messsage = document.getElementById("nessage")
+
+        async function render () {
+            const url = "https://jsonplaceholder.typicode.com/users";
+            message.textContent = "Loading...";
+            await new Promise(resolve => setTimeout(resolve, 800));
+            const response = await fetch(url);
+            const data = await response.json();
+            message.textContent = "Loaded!";
+            
+            for (let i = 0; i < data.length; i++) {
+                const li = document.createElement("li");
+                li.textContent = data[i].name;
+                list.appendChild(li);
+            }
+        }
+
+        render();
+    </script>
+</body>
+</html>
