@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+</head>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        font-family: Poppins;
+        background-color: #2c3e50;
+        color: white;
+    }
+
+    .game-container {
+        text-align: center;
+    }
+
+    .board {
+        display: grid;
+
+        grid-template-rows: repeat(3, 150px);
+        grid-template-columns: repeat(3, 150px);
+
+        gap: 15px;
+
+        margin: 20px auto;
+    }
+
+    .cell {
+        width: 150px;
+        height: 150px;
+        background-color: #ecf0f1;
+        border-radius: 20px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 3rem;
+        color: #34495e;
+        transition: background 0.3 ease;
+    }
+
+    .cell:hover {
+        background-color: #c2c6c7;
+    }
+
+    #statusText {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+    }
+
+    button:hover{
+        background-color: #e36d60;
+    }
+</style>
+<body>
+    <div class="game-container">
+        <h1>Tic Tac Toe Game</h1>
+
+        <div id="statusText">Player X's Turn</div>
+        
+        <div class="board" id="board">
+            <div class="cell" data-index="0"></div>
+            <div class="cell" data-index="1"></div>
+            <div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div>
+            <div class="cell" data-index="4"></div>
+            <div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div>
+            <div class="cell" data-index="7"></div>
+            <div class="cell" data-index="8"></div>
+        </div>
+
+        <button id="restrart">New Game</button>
+    </div>
+
+    <script>
+        const status = document.getElementById("statusText");
+        const board = document.getElementById("board");
+        const restart = document.getElementById("restart");
+        let boardState = ["", "", "", "", "", "", "", "", ""];
+        let gameActive = true;
+        let playerTurn = "X";
+        const winningPos = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], 
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], 
+    [0, 4, 8], [2, 4, 6]            
+];
+
+        function handleClick (event) {
+            let cellClicked = event.target;
+            let cellIndex = cellClicked.getAttribute("data-index");
+            
+
+            if (boardState[cellIndex] !== "" || !gameActive) return;
+
+            boardState[cellIndex] = playerTurn;
+
+            cellClicked.textContent = playerTurn;
+
+            checkResult();
+        }
+
+        function checkResult () {
+            let roundWon = false;
+
+            for (let i = 0; i < winningPos.length; i++) {
+                const condition = winningPos[i];
+
+                let a = boardState[condition[0]];
+                let b = boardState[condition[1]];
+                let c = boardState[condition[2]];
+
+                if (a === "" || b === "" || c === "") continue;
+
+                if (a === b && b === c && c === a) {
+                    roundWon = true;
+                    break;
+                }
+            }
+
+            if (roundWon) {
+                status.textContent = `Player ${playerTurn} Won!`;
+                gameActive = false;
+                return;
+            }
+
+            playerTurn = playerTurn === "X" ? "O" : "X";
+            status.textContent = `Player ${playerTurn}'s Turn`;
+        }
+
+        document.querySelectorAll('.cell').forEach(cell => {
+            cell.addEventListener("click", handleClick);
+        });
+
+        restrart.addEventListener("click", function (){
+            location.reload();
+        });
+
+    </script>
+</body>
+</html>
